@@ -1,6 +1,40 @@
 
 # figure out how to set configs, i.e. set rigid to TRUE for all
 
+# Should fill in with VIN decoder first, then use this
+get_duty <- function(.data) {
+  # Assuming LD as this is a residential calculator
+  .data %>%
+    dplyr::mutate(duty_fill = "LD",
+                  duty = dplyr::coalesce(duty, duty_fill)) %>%
+    dplyr::select(-duty_fill)
+}
+
+get_type <- function(.data) {
+  # assuming purchased
+  .data %>%
+    dplyr::mutate(type_fill = "PURCHASE",
+                  type = dplyr::coalesce(type, type_fill)) %>%
+    dplyr::select(-type_fill)
+}
+
+get_initial_cost <- function(.data) {
+
+  .data %>%
+    dplyr::left_join(initial_cost_df,
+              by = c("duty", "powertrain")) %>%
+    dplyr::mutate(initial_cost = dplyr::coalesce(initial_cost, initial_cost_fill)) %>%
+    dplyr::select(-initial_cost_fill) %>%
+    dplyr::left_join(initial_cost_df %>%
+                       dplyr::group_by(duty) %>%
+                       dplyr::summarise(initial_cost_fill =  mean(initial_cost_fill))
+                     %>%
+                       dplyr::ungroup(),
+                     by = "duty") %>%
+    dplyr::mutate(initial_cost = dplyr::coalesce(initial_cost, initial_cost_fill)) %>%
+    dplyr::select(-initial_cost_fill)
+}
+
 get_model_year <- function(.data) {
   .data %>%
     dplyr::mutate(model_year_fill = format(Sys.Date(), format = "%Y") %>% as.integer(),
@@ -50,9 +84,13 @@ get_term <- function(.data, max_vmt = 200000) {
     dplyr::select(-term_fill)
 }
 
+
+
 # filter to rows with missing data, fill in, bind back on
 
 waterfall <- list(
+  get_duty,
+  get_type,
   get_model_year,
   get_purchase_year,
   get_annual_vmt,
