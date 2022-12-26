@@ -35,7 +35,7 @@ get_initial_cost <- function(.data) {
     dplyr::select(-initial_cost_fill)
 }
 
-get_model_year <- function(.data) {
+  get_model_year <- function(.data) {
   .data %>%
     dplyr::mutate(model_year_fill = format(Sys.Date(), format = "%Y") %>% as.integer(),
                   model_year = dplyr::coalesce(model_year, model_year_fill)) %>%
