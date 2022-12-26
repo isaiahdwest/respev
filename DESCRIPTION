@@ -1,0 +1,18 @@
+Package: respev
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Authors@R: 
+    person("Isaiah", "Westphalen", , "isaiahwestphalen@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Calculate the TCO of purchasing a PEV vs. ICEV vehicle.
+License: use_mit_license()
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports: 
+    dplyr,
+    magrittr,
+    tibble,
+    tidyr
+Depends: 
+    R (>= 2.10)
