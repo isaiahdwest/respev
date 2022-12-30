@@ -9,7 +9,8 @@ initial_cost_df <- data.frame(
   powertrain = c(rep("ICEV", 3), rep("BEV", 3), rep("PHEV", 3), rep("HEV", 3), rep("FCV", 3)),
   initial_cost_fill = c(rep(50000, 5), rep(75000, 5), rep(100000, 5)),
   stringsAsFactors = FALSE
-)
+) %>%
+  dplyr::mutate(type = "PURCHASE")
 
 usethis::use_data(annual_vmt_df,
                   initial_cost_df,
